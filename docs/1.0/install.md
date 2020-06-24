@@ -8,12 +8,12 @@ title: 安装使用
 ## 开始安装
 ### 1.在laravel项目根目录下，通过 Composer 安装扩展包
 ```composer
-composer require tanwencn/laravel-admin
+composer require tanwencn/simple-admin
 ```
 ```Laravel5```请使用```^1.0```版本
 
 ```composer
-composer require tanwencn/laravel-admin -v ^1.0
+composer require tanwencn/simple-admin -v ^1.0
 ```
 
 ### 2.修改配置文件

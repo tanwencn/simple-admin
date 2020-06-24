@@ -53,7 +53,7 @@ title: 配置项
 pjax内容过滤中间件，删除这个中间件，会自动取消pjax功能
 
 ### Tanwencn\Admin\Http\Middleware\Asset
-因为```laravel-admin```使用Pjax功能，所以需要全局加载```css/js```资源，这里就是注册默认资源的地方。
+因为```simple-admin```使用Pjax功能，所以需要全局加载```css/js```资源，这里就是注册默认资源的地方。
 
 ### Tanwencn\Admin\Http\Middleware\HttpLog
 写入后台操作日志的地方。

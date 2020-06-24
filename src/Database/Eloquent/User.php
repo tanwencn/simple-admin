@@ -69,7 +69,7 @@ class User extends Authenticatable
 
     public function getAvatarAttribute()
     {
-        return $this->getMetas('avatar') ?: asset('/vendor/laravel-admin/logo.png');
+        return $this->getMetas('avatar') ?: asset('/vendor/simple-admin/logo.png');
     }
 
     public function getMorphClass()

@@ -1,14 +1,14 @@
 {
-    "name": "tanwencn/laravel-admin",
+    "name": "tanwencn/simple-admin",
     "description": "Laravel Admin",
     "type": "library",
-    "keywords": ["laravel", "admin"],
-    "homepage": "https://github.com/tanwencn/laravel-admin",
-    "license": "MIT",
+    "keywords": ["laravel", "admin", "adminlte", "bootstrap", "pjax", "dashboard"],
+    "homepage": "https://github.com/tanwencn/simple-admin",
+    "license": "Apache License2.0",
     "authors": [
         {
             "name": "tanwen",
-            "email": "361657055@qq.com"
+            "email": "tanwencn@163.com"
         }
     ],
     "require": {

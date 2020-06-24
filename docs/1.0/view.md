@@ -62,7 +62,7 @@ Admin.boot(function () {
 如果你需要重写扩展包的视图，比如想自定义一个登录页面，可以按照以下方法进行操作。
 
 ### 1.复制视图文件到指定位置
-复制```/vendor/tanwencn/laravel-admin/resources/views```下的所有文件和目录到```/resources/views/vendor/admin```目录。
+复制```/vendor/tanwencn/simple-admin/resources/views```下的所有文件和目录到```/resources/views/vendor/admin```目录。
 
 ###  2.更改登录页的模板文件
 打开登录页模板文件：```/resources/views/vendor/admin/_auth/login.blade.php```，在此对其进行修改完成后保存即可。

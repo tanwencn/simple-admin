@@ -37,7 +37,7 @@ class AdminServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config' => config_path(),
-                __DIR__ . '/../public' => public_path('vendor/laravel-admin'),
+                __DIR__ . '/../public' => public_path('vendor/simple-admin'),
                 __DIR__ . '/../resources/lang' => resource_path('lang'),
                 __DIR__ . '/../database/migrations' => database_path('migrations')
             ], 'admin');
