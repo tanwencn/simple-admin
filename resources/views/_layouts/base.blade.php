@@ -17,7 +17,7 @@
     {!! Admin::asset()->header() !!}
     @includeIf('admin::header')
 </head>
-<body class="{{ config('admin.layout.body_class') }}">
+<body class="hold-transition sidebar-mini layout-fixed text-sm">
 <div class="wrapper">
 
     <!-- Navbar -->
@@ -27,9 +27,7 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="index3.html" class="brand-link" style="font-size: 1.25rem">
-            {!! config('admin.layout.logo') !!}
-        </a>
+        @include('admin::logo')
 
         <!-- Sidebar -->
         <div class="sidebar">
@@ -80,12 +78,6 @@
         </section>
         <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
-    @if(config('admin.layout.footer') !== false)
-        <footer class="main-footer">
-            {!! config('admin.layout.footer') !!}
-        </footer>
-@endif
 
 <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark" id="c-s-l">

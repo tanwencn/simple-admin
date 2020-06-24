@@ -2,12 +2,6 @@
 
 return [
 
-    'layout' => [
-        'body_class' => 'hold-transition sidebar-mini layout-fixed text-sm',
-        'logo' => '&nbsp;&nbsp;&nbsp;<strong>Laravel</strong>&nbsp;&nbsp;<span class="brand-text font-weight-light">Admin</span>',
-        'footer' => '<strong>Made by The <a href="http://www.tanecn.com" target="_blank">TaneCN</a>.</strong>'
-    ],
-
     'router' => [
         'prefix' => 'admin',
         'namespaces' => 'App\\Admin\\Controllers',
@@ -37,7 +31,7 @@ return [
     'auth' => [
         'login' => [
             'controller' => 'App\Admin\Controllers\LoginController',
-            'username' => 'name'
+            //'username' => 'name'
         ],
         'guards' => [
             'admin' => [

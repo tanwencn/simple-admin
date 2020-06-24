@@ -146,8 +146,8 @@ class UserController extends Controller
         $request = request()->replace(array_filter(request()->all()));
 
         $validates = [
-            'email' => ['email', 'max:255'],
-            'name' => ['max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'name' => ['required', 'max:255'],
             'metas' => 'array',
             //'role' => Rule::requiredIf(Admin::user()->can('edit_role')),
             'role.*' => function ($attribute, $value, $fail) {
@@ -195,8 +195,6 @@ class UserController extends Controller
 
             $model->roles()->sync($roles, false);
         }
-
-        $model->givePermissionTo('dashboard');
 
         $url = Admin::user()->can('view_user') ? Admin::action('index') : Admin::action('edit', $model->id);
 

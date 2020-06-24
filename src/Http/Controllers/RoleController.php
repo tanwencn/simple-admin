@@ -111,7 +111,7 @@ class RoleController extends Controller
         $model->save();
 
         if ($request->filled('permissions')) {
-            $model->syncPermissions($request->input('permissions'));
+            $model->syncPermissions(array_merge($request->input('permissions', []), ['dashboard']));
         }
 
         return redirect(\Admin::action('index'))->with('success', trans('admin.save_succeeded'));

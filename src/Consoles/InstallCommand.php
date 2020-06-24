@@ -62,8 +62,8 @@ class InstallCommand extends Command
 
         $this->call('migrate');
 
-        $this->call('admin:registerPermissions');
-
         $this->call('admin:build');
+
+        $this->call('admin:registerPermissions');
     }
 }

@@ -14,7 +14,7 @@
                     <div class="card-body">
                         @foreach($user_name_fileds as $key => $filed)
                             <div class="form-group row">
-                                <admin::label :required="$key==0" class="col-md-3 text-right"
+                                <admin::label {{--:required="$key==0"--}} required class="col-md-3 text-right"
                                               :text="trans('admin.'.$filed)"/>
                                 <div class="col-md-6">
                                     <admin::input :name="$filed" :value="old($filed, $model->{$filed})"
