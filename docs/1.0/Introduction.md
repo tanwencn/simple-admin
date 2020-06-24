@@ -4,7 +4,9 @@ title: 介绍
 sidebar_label: 介绍
 ---
 
-Laravel Admin 提供一个基础的RBAC的后台管理框架，并在此基础上提供一些后台基础功能。
+Simple Admin 是一款基于Laravel+Bootstrap的后台开发框架。
+
+因时间因素，只提供Lalravel-LTS版本维护，目前最新版本为Laravel6。
 
 - [查看文档](https://www.tanecn.com/docs/introduction)
 - [在线演示](https://demo.tanecn.com/admin)(账号密码```demo:demo```)
