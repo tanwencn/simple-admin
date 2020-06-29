@@ -7,52 +7,54 @@ title: 菜单
 
 ## 注册菜单示例
 
-在视图渲染之前的任何地方注册，都会被视图加载出来，只要调用```Admin::menu()->new('添加菜单')```即可。
+在视图渲染之前的任何地方注册，都会被视图加载出来，建议在`app\admin\Middleware\Menu`中统一管理。
 
-如：在```admin.config.router.middleware```中添加```App\Admin\Middleware\Menu```中间件。
+示例：
 
 ```php
-public function handle($request, Closure $next)
-    {
-        Admin::menu()->new('<i class="fa fa-weixin"></i> <span>一级菜单</span>')
-            ->child('二级菜单', function (Item $menu) {
-                $menu->route('admin.menu')->auth('二级菜单所需要的权限');
-            });
-        Admin::menu()->new('<i class="fa fa-weixin"></i> <span>一级菜单</span>')
-            ->child('二级菜单2', function (Item $menu) {
-                $menu->route('admin.menu');
-                $menu->child('三级菜单')->auth('三级显示所需要的权限');
-            })
-        ;
+public function boot()
+{
+    $this->add(trans_choice('admin.dashboard', 0))//添加菜单
+         ->icon('tachometer-alt')//菜单图标，参考fontawesome5的fas图标
+         ->uri('/')//菜单uri
+         ->auth('dashboard');//相应权限才能显示
+    
+    $this->add('用户')->icon('user-lock')
+          //添加子菜单
+          ->child('用户列表', function($menu){
+            $menu->uri('users')->auth('用户列表');
+    })
+          ->child('权限列表', function($menu){
+        $menu->uri('permissions')->auth('view_permission');
+    });
 
-        return $next($request);
-    }
+    $this->group('系统', 99)//添加菜单分类
+        ->add('SimpleAdmin')
+        ->sort(99)//菜单排序
+        ->icon('record-vinyl')
+        ->child('打开官网', function($menu){
+            $menu->blank() //新窗口打开链接
+            ->url('http://tanecn.com')
+            ->sort(100);//子菜单排序
+    })
+        ->child(trans_choice('admin.operationlog', 0), function($menu){
+        $menu->route('admin.operationlog');
+    });
+}
 ```
-以上就是菜单注册的全过程，```Admin::menu()->new()```会返回一个新的菜单对象，这个对象的所有函数都会返回当前菜单。```$menu->child()```类似于```new()```，不同在地方在于```child()```不会返回给你子菜单，子菜单的所有操作都在闭包中进行。
-
 ## 图标
-图标参考:```https://fontawesome.com/v4.7.0/icons/```
+图标参考:```fontawesome5```的`fas`图标
 
-## 可用方法
 
-### 注册新菜单
-```$menu = Admin::menu()->new($title, $sort=10)```会返回一个新的菜单对象。
+## 链接
 
-### 添加子菜单
-```$menu->child($title, $closure)```会在当前菜单对象中注册一个子菜单，并在闭包中返回。
-
-### 菜单显示权限
-```$menu->auth($authority)```会根据是否具有```$authority```权限来进行显示判断。
-
-### 链接
-
-#### 路由
+### 路由
 ```$menu->route($name, $parameters = [], $absolute = true)```用路由生成菜单。
 
-#### 相对链接
+### 相对链接
 ```$menu->uri($uri)```用相对链接生成菜单。
 
-#### 绝对链接
+### 绝对链接
 ```$menu->url($url)```用绝对链接生成菜单。
 
 #### 新窗口打开菜单

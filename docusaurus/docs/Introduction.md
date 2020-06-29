@@ -51,3 +51,10 @@ Simple Admin 是一款基于Laravel+Bootstrap的后台开发框架。
 ## 授权许可
 Apache2开源协议发布，并提供免费使用。
 
+## 其它选择
+- [Laravel Admin](https://github.com/z-song/laravel-admin)
+很火的一个包，功能很全。事实上如果不是这个包太过臃肿，定位不符合自身团队利益，`simpleadmin`就不会出现了。
+- [voyager](https://github.com/the-control-group/voyager)
+这个在国内不怎么火，因为体验上跟国内行情有点对不上眼，但是其代码非常优秀，个人项目可以体验一把。
+
+

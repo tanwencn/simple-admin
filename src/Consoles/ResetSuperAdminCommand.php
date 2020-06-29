@@ -57,7 +57,9 @@ class ResetSuperAdminCommand extends Command
         if($user->save())
             $user->assignRole('superadmin');
 
-        $this->info('Reset SuperAdmin is complete.New Password:');
-        $this->info($password);
+        $this->info('Reset SuperAdmin is complete.');
+        $this->info('email:'.$user->email);
+        $this->info('name:'.$user->name);
+        $this->info('password:'.$password);
     }
 }

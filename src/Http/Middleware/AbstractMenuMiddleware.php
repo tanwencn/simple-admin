@@ -37,6 +37,11 @@ abstract class AbstractMenuMiddleware
 
     public function boot(){}
 
+    /**
+     * @param $name
+     * @param $arguments
+     * @return \Tanwencn\Admin\Foundation\Menus\Item
+     */
     public function __call($name, $arguments)
     {
         return call_user_func([$this->app, $name], ...$arguments);

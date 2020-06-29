@@ -2,7 +2,7 @@
 id: elfinder
 title: 文件资源管理器
 ---
-后台已经集成了```tanwencn/elfinder```，且已在```admin.php```中写好了默认配置。
+后台已经集成了```elfinder```，且已在```admin.php```中写好了默认配置。
 
 ## 配置驱动
 ```php

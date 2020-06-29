@@ -10,11 +10,6 @@ title: 安装使用
 ```composer
 composer require tanwencn/simple-admin
 ```
-```Laravel5```请使用```^1.0```版本
-
-```composer
-composer require tanwencn/simple-admin -v ^1.0
-```
 
 ### 2.修改配置文件
 数据库存信息，在```.env``` 设置数据库连接信息
@@ -25,13 +20,14 @@ composer require tanwencn/simple-admin -v ^1.0
 ```php
 php artisan admin:install
 ```
+最后会在命令行输出初始账号及密码，注意复制。
 
 ### 4.安装完成
 
 打开链接：http://youwebsite/admin
 
 输入登录账号：admin@admin.com   
-输入登录密码：admin
+输入登录密码：安装时复制的密码
 PS:如若忘记密码或者误删除此账号，可以用```php artisan admin:resetSuperAdmin```命令恢复此账号至安装状态。
 
 ### 5.开发目录

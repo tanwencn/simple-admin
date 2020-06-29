@@ -7,8 +7,7 @@
 
 module.exports = {
     docs: {
-        "开始": ['introduction', 'install', 'config'],
-        "基本使用": ['menu', 'asset', 'view', 'controller', 'permission'],
+        "基本使用": ['introduction', 'install', 'config', 'menu', 'view', 'controller', 'components'],
         "插件": ['elfinder', 'captcha', 'navigation', 'blog', 'ecommerce']
     },
 };
