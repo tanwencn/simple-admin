@@ -30,10 +30,7 @@ module.exports = {
         },
       ],
     },
-    footer: {
-      style: 'dark',
-      copyright: `Copyright © ${new Date().getFullYear()} Simple Admin, Inc. Built with www.tanecn.com.`,
-    },
+    sidebarCollapsible: false,
   },
   presets: [
     [
@@ -41,6 +38,8 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
+          routeBasePath: '/', // Set this value to '/'.
+          homePageId: 'introduction', // Set to existing document id.
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
