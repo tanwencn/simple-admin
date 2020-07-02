@@ -30,6 +30,10 @@ module.exports = {
         },
       ],
     },
+    footer: {
+      style: 'dark',
+      copyright: `Copyright © 2019-${new Date().getFullYear()} Simple Admin, Inc. Built with www.tanecn.com.`,
+    },
     sidebarCollapsible: false,
   },
   presets: [
