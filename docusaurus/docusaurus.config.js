@@ -21,7 +21,7 @@ module.exports = {
         src: 'img/logo.png',
       },
       links: [
-        {to: 'docs/introduction', label: '文档', position: 'left'},
+        {to: '/', label: '文档', position: 'left'},
         {to: 'https://demo.tanecn.com/admin', label: '演示', position: 'left'},
         {
           href: 'https://github.com/tanwencn/simple-admin',

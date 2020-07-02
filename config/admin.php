@@ -31,6 +31,7 @@ return [
     'auth' => [
         'login' => [
             'controller' => 'App\Admin\Controllers\LoginController',
+            'throttle' => '60,15'
             //'username' => 'name'
         ],
         'guards' => [

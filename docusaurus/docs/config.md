@@ -28,6 +28,7 @@ title: 配置项
 |  key   | value  |
 |  ----  | ----  |
 |auth.login.username|登录字段，默认为`email`。更改此选项的同时，需要注意数据库必填字段及索引等结构。|
+|auth.login.throttle|登录限制，默认为`60,15`，即每15分钟内接受同一用户60次请求|
 
 ## 授权(auth)
 参考Laravel官方文档的config.auth设置项。
