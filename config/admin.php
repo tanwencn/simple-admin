@@ -8,6 +8,7 @@ return [
         'routes' => app_path('Admin/routes.php'),
         'index' => 'admin.dashboard',
         'middleware' => [
+            Tanwencn\Admin\Http\Middleware\FirstLogin::class,
             Tanwencn\Admin\Http\Middleware\Pjax::class,
             App\Admin\Middleware\Menu::class
         ]

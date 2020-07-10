@@ -21,14 +21,16 @@ title: 配置项
 |  class   | value  |
 |  ----  | ----  |
 | `app\Admin\Middleware\Menu`  | 注册菜单的中间件 |
-| `Tanwencn\Admin\Http\Middleware\Pjax`  | `pjax`内容过滤中间件，删除这个中间件，会自动取消`pjax`功能 |
+| `Tanwencn\Admin\Http\Middleware\Pjax`  | `PJAX`功能，如若不需要，可删除此行 |
+| `Tanwencn\Admin\Http\Middleware\FirstLogin`  | 首次登录需要改密码，如若不需要，可删除此行 |
 
-## 登录设置
+## 登录和安全
 
 |  key   | value  |
 |  ----  | ----  |
 |auth.login.username|登录字段，默认为`email`。更改此选项的同时，需要注意数据库必填字段及索引等结构。|
 |auth.login.throttle|登录限制，默认为`60,15`，即每15分钟内接受同一用户60次请求|
+|auth.password.rule|密码验证条件及提示信息|
 
 ## 授权(auth)
 参考Laravel官方文档的config.auth设置项。
