@@ -31,11 +31,11 @@ Simple Admin 是一款基于Laravel+Bootstrap的后台开发框架。
 - 高度可自定义
 
 ## 文档、安装和演示
-- [查看文档](https://www.tanecn.com/docs/introduction)
+- [查看文档](https://www.tanecn.com/)
 - [在线演示](https://demo.tanecn.com/admin)
 
 ## UI截图
-![Simple Admin](/img/preview.jpg)
+![Simple Admin](/docusaurus/static/img/preview.jpg)
 
 ## 特别鸣谢
 - [Laravel Permission](https://github.com/spatie/laravel-permission)
