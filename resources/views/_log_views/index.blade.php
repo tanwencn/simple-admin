@@ -65,7 +65,7 @@
     <div class="row m-2 pt-3">
             <!-- begin col-12 -->
             <div class="col-md-3">
-                <div class="card sidebar">
+                <div class="card sidebar" style="min-height:200px">
                     <div class="card-header">
                         <h3 class="card-title">Files</h3>
                     </div>

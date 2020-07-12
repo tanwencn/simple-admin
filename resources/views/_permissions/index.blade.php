@@ -45,7 +45,7 @@
                     <admin::table checkbox="true" nodata="true">
                         <slot name="thead">
                             <tr>
-                                <th>{{ trans('admin.permission') }}</th>
+                                <th>{{ trans_choice('admin.permission', 1) }}</th>
                                 <th>{{ trans('admin.name') }}</th>
                                 <th>{{ trans('admin.guard') }}</th>
                                 <th>{{ trans('admin.updated_at') }}</th>
