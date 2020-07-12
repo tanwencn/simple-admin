@@ -46,12 +46,8 @@ class LoginController extends Controller
         return view('admin::_auth.login')->with('username', $this->username());
     }
 
-    public function logout(Request $request)
+    public function loggedOut(Request $request)
     {
-        $this->guard()->logout();
-
-        $request->session()->invalidate();
-
         return redirect($this->redirectPath());
     }
 

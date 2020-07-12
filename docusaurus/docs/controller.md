@@ -28,8 +28,8 @@ class CustomizeController extends Controller
 以上方法会自动加载后台视图目录中的```customizes```文件夹中的```index.blade.php```文件。
 这个函数的加载逻辑就是以控制器名为复数形式的视图目录，如果你不喜欢这个小功能，你可以使用```Admin::view()```函数来加载视图。
 
-### 权限
-判断后台权限是件很自由的事情，你可以按照```Laravel```文档来自由的编写，也可以在控制器中直接重写映射函数来快速的完成它：
+## 权限
+权限的使用完全继承了`Laravel`原生的`Gates`部份。而在控制器中只要你继承了提供的父类，便可以以直接重写射函数来快速的完成它：
 ```php
 protected function abilitiesMap()
 {

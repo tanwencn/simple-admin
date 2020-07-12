@@ -12,9 +12,6 @@ namespace Tanwencn\Admin\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\FileBag;
-use Tanwencn\Admin\Database\Eloquent\OperationLog;
 use Tanwencn\Admin\Facades\Admin;
 
 class FirstLogin
@@ -31,12 +28,14 @@ class FirstLogin
     }
 
     protected function hasFirstLogin(){
-        $operation = Admin::user()->operation()
-            ->where('uri', route('admin.login', [], false))
-            ->where('method', 'POST')
-            ->orderBy('id')
-            ->first();
+        return session()->remember('has-first-login'.Admin::user()->id, function(){
+            $operation = Admin::user()->operation()
+                ->where('uri', route('admin.login', [], false))
+                ->where('method', 'POST')
+                ->orderBy('id')
+                ->first();
 
-        return !$operation || $operation->created_at > Admin::user()->updated_at;
+            return !$operation || $operation->created_at > Admin::user()->updated_at;
+        });
     }
 }

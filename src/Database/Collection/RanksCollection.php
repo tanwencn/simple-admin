@@ -25,6 +25,6 @@ class RanksCollection extends Collection
         if($key)
             return $this->ranks->get($key);
         else
-            $this->ranks;
+            return $this->ranks;
     }
 }

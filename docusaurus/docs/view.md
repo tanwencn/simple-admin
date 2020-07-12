@@ -3,7 +3,17 @@ id: view
 title: 视图
 ---
 
-后台使用了```Laravel```的```Blade```模板引擎和```AdminLTE```模板框架做为布局和样式标准。
+后台使用了```Laravel```的```Blade```模板引擎和```AdminLTE```模板框架做为布局和样式标准，并在此基础上封装了一些常用组件。
+
+## 初始视图
+安装完成后，在`Views`目录有以下文件，可以根据需求进行自定义:
+- `footer/header` 进行静态资源注册。
+- `login` 登录页
+- `logo` 后台logo位置
+- `top_navbar` 顶部菜单
+- `options` 这里有一个默认示例，只要添加菜单及表单，就可以完成自定义全局配置项的功能了。
+- `index.dashboard` 后台首页模板
+- `components` 组件目录
 
 ## 加载视图
 视图的加载可以参考```Laravel```的官方文档。同时后台提供了简单的二次封装，常规情况下，你可以直接使用```Admin::view('index/dashboard');```来进行视图加载。
@@ -30,16 +40,7 @@ Admin.boot(function () {
 @endsection
 ```
 
-### 面包屑
-上面的例子提供了一个面包屑选项，系统本身会默认用仪表盘做为起始面包屑，当前视图标题做为结束面包屑，比如此选项为空的情况下，默认生成的面包屑就为```仪表盘>添加文章```。
-```html
-@section('breadcrumbs') //面包屑
-<li><a href="{{ Admin::action('index') }}"> 所有文章</a></li>
-@endsection
-```
-在视图中加上这段代码后，面包屑就为```仪表盘>所有文章>添加文章```。
-
-### 局部JS
+## JS
 我们写常规代码时，大多会以```jquery```加载完成做为节点来写局部JS，如：
 ```js
 $(function(){
@@ -53,13 +54,9 @@ Admin.boot(function () {
 });
 ``` 
 
-## 初始视图
-安装完成后，在`Views`目录有以下文件，可以根据需求进行自定义:
-- `footer/header` 进行静态资源注册。
-- `login` 登录页
-- `logo` 后台logo位置
-- `top_navbar` 顶部菜单
-- `options` 这里有一个默认示例，只要添加菜单及表单，就可以完成自定义全局配置项的功能了。
-- `index.dashboard` 后台首页模板
-- `components` 组件目录
+## 组件
+### 面包屑
+```html
+<admin::bread-middle :middle="['url' => Admin::action('index'), 'name' => '权限列表']" />
+```
 

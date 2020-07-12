@@ -14,7 +14,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group row">
-                            <admin::label :text="trans('admin.permission')" required="true" class="col-md-3 text-right" />
+                            <admin::label :text="trans_choice('admin.permission', 1)" required="true" class="col-md-3 text-right" />
                             <div class="col-md-6">
                                 <admin::input type="text" :model="$model" name="name" id="name" :value="old('name', $model->name)"/>
                             </div>

@@ -27,7 +27,7 @@
                             <admin::label class="col-md-3 text-right" :text="trans('admin.avatar')"/>
                             <div class="col-md-6">
                                 <admin::input-file name="metas[avatar]"
-                                                   :value="old('metas.avatar', $model->getMetas('avatar'))"/>
+                                                   :value="old('metas.avatar', $model->avatar)"/>
                             </div>
                         </div>
                         @can('edit_role')

@@ -13,6 +13,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 use Tanwencn\Admin\Facades\Admin;
 use Illuminate\Support\Facades\Auth;
 use Tanwencn\Admin\Http\Rules\HasAlreadyPermission;
@@ -28,7 +29,8 @@ class PermissionController extends Controller
 
     public function index(Request $request)
     {
-        $results = Permission::all();
+        $results = app(PermissionRegistrar::class)->getPermissions();
+        //$results = Permission::all();
         /*$search = $request->query('search');
         if (!empty($search)) {
             $model->where(function ($query) use ($search) {

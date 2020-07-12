@@ -11,6 +11,7 @@ namespace Tanwencn\Admin\Database\Eloquent;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Traits\HasRoles;
 use Tanwencn\Admin\Database\Eloquent\Concerns\HasMetas;
 use Illuminate\Support\Facades\Cache;
@@ -48,13 +49,6 @@ class User extends Authenticatable
         /*static::creating(function ($model) {
             if(!$model->password) $model->password = config('admin.auth.login.default_password', '123456');
         });*/
-        static::deleting(function ($model) {
-            if (method_exists($model, 'isForceDeleting') && !$model->isForceDeleting()) {
-                return;
-            }
-
-            $model->metas()->delete();
-        });
     }
 
     public function getNameAttribute($value)
@@ -69,7 +63,7 @@ class User extends Authenticatable
 
     public function getAvatarAttribute()
     {
-        return $this->getMetas('avatar') ?: asset('/vendor/simple-admin/logo.png');
+        return $this->metas->get('avatar') ?: asset('/vendor/simple-admin/logo.png');
     }
 
     public function getMorphClass()
@@ -84,8 +78,10 @@ class User extends Authenticatable
 
     public function getLastLoginTimeAttribute()
     {
-        $operation = $this->operation()->where('uri', route('admin.login', [], false))->where('method', 'POST')->first();
-        return $operation ? $operation->created_at : null;
+        return session()->remember('user-last-login-time', function(){
+            $operation = $this->operation()->where('uri', route('admin.login', [], false))->where('method', 'POST')->first();
+            return $operation ? $operation->created_at : null;
+        });
     }
 
     public function operation()
@@ -93,8 +89,18 @@ class User extends Authenticatable
         return $this->hasMany('Tanwencn\Admin\Database\Eloquent\OperationLog', 'user_id', 'id');
     }
 
-    /*permission cache bug
-     * public function getPermissionsAttribute() {
+    public function forgetCachedPermissions()
+    {
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+        Cache::forget('permissions_cache');
+        Cache::forget('roles_cache');
+    }
+
+    /*public function getPermissionsAttribute(){
+        dd(app(PermissionRegistrar::class)->getPermissions());
+    }*/
+
+    public function getPermissionsAttribute() {
         $permissions = Cache::rememberForever('permissions_cache', function() {
             return Permission::select('permissions.*', 'model_has_permissions.*')
                 ->join('model_has_permissions', 'permissions.id', '=', 'model_has_permissions.permission_id')
@@ -112,5 +118,5 @@ class User extends Authenticatable
         });
 
         return $roles->where('model_id', $this->id);
-    }*/
+    }
 }

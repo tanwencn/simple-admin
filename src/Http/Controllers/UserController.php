@@ -37,7 +37,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $model = $this->model::with('roles');
+        $model = $this->model::query();
         if (!Admin::user()->hasRole('superadmin'))
             $model->whereHas('roles', function ($query) {
                 $query->where('name', '!=', 'superadmin');
@@ -79,7 +79,6 @@ class UserController extends Controller
 
     protected function _form($model)
     {
-        $model->load('metas');
         $role = Role::query();
         /*if (!Admin::user()->hasRole('superadmin'))
             $role->whereIn('name', Admin::user()->roles->pluck('name')->all());*/
@@ -94,7 +93,7 @@ class UserController extends Controller
         if (Admin::user()->id != $id)
             $this->authorize('edit_user');
 
-        $model = $this->model::with('roles')->findOrFail($id);
+        $model = $this->model::findOrFail($id);
 
         return $this->_form($model);
     }
@@ -121,7 +120,7 @@ class UserController extends Controller
         Admin::user()->password = $input['password'];
         Admin::user()->save();
 
-        return redirect(config('admin.router.prefix', 'admin').'/')->with('success', trans('admin.save_succeeded'));
+        return redirect(route('admin.logout'));
     }
 
     public function store()
@@ -168,8 +167,6 @@ class UserController extends Controller
         $model->fill($input);
 
         $model->save();
-
-        $model->saveMetas($input['metas']);
 
         if (!empty($roles) && Admin::user()->can('edit_role')) {
             $model->roles()->detach();
