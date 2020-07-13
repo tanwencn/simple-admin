@@ -246,7 +246,7 @@
             '<div class="modal-dialog modal-lg">' +
             '<div class="modal-content">' +
             '<div class="modal-body">' +
-            '<pre><code class="val">' + val[4] + '</code></pre>' +
+            '<pre><code class="val">' + val[4].replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}) + '</code></pre>' +
             '</div>' +
             '</div>' +
             '</div>' +
