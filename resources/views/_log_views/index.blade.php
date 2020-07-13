@@ -211,6 +211,8 @@
                         table = $('.table').DataTable({
                             searching: true,
                             ordering:false,
+                            paging:false,
+                            scrollY:$(window).height() ? $(window).height() - 140 : 420,
                             dom: 'Brt',
                             buttons: [
                                 'print'
