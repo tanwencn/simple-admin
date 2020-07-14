@@ -108,14 +108,13 @@ class LogViewController extends Controller
         while ($line >= 0 && $while) {
             $file->seek($line);
             $content[$line] = trim($file->current());
-            if (preg_match('/\[\d{4}-\d{2}-\d{2}.*\].*/', $content[$line])) $while = false;
+            if (preg_match('/\[\d{4}-\d{2}-\d{2}.*?\].*/', $content[$line])) $while = false;
             $line--;
 
         }
         if ($content) {
             $data = array_reverse(array_filter($content));
-            preg_match('/^\[(\d{4}-\d{2}-\d{2}.+\d)\] (.+?)\.(.+?): (.*)/', $data[0], $result);
-            //dd($data);
+            preg_match('/^\[(\d{4}-\d{2}-\d{2}.*?)\] (.+?)\.(.+?): (.*)/', $data[0], $result);
             unset($result[0]);
             $result[] = implode("\n", $data);
         }
