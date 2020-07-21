@@ -59,7 +59,8 @@ class UserController extends Controller
         return $this->view('index', compact('results'));
     }
 
-    public function resetPassword(Request $request){
+    public function resetPassword(Request $request)
+    {
         $input = $request->validate([
             'id' => ['required'],
             'password' => ['required', 'string'],
@@ -109,7 +110,7 @@ class UserController extends Controller
             'old_password' => ['required', 'string', 'max:255',
                 function ($attribute, $value, $fail) {
                     if (!Hash::check($value, Admin::user()->password)) {
-                        $fail(trans('admin.old_password').trans('admin.error'));
+                        $fail(trans('admin.old_password') . trans('admin.error'));
                     }
                 },],
             'password' => array_merge(['required', 'string', 'confirmed'], config('admin.auth.password.rule', [])),
@@ -168,8 +169,7 @@ class UserController extends Controller
 
         $model->save();
 
-        if (!empty($roles) && Admin::user()->can('edit_role')) {
-            $model->roles()->detach();
+        if (Admin::user()->can('edit_role')) {
 
             if (!Admin::user()->hasRole('superadmin'))
                 $roles = array_diff($roles, ['superadmin']);
@@ -190,7 +190,19 @@ class UserController extends Controller
                 ->map->id
                 ->all();
 
-            $model->roles()->sync($roles, false);
+
+            $diff = array_merge(
+                array_diff($model->roles->pluck('id')->all(), $roles),
+                array_diff($roles, $model->roles->pluck('id')->all())
+            );
+
+            if (!empty($diff)) {
+                $model->roles()->detach();
+
+                $model->roles()->sync($roles, false);
+
+                $model->forgetCachedPermissionsByWithUser();
+            }
         }
 
         $url = Admin::user()->can('view_user') ? Admin::action('index') : Admin::action('edit', $model->id);

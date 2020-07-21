@@ -92,6 +92,10 @@ class User extends Authenticatable
     public function forgetCachedPermissions()
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
+        $this->forgetCachedPermissionsByWithUser();
+    }
+    
+    public function forgetCachedPermissionsByWithUser(){
         Cache::forget('permissions_cache');
         Cache::forget('roles_cache');
     }
