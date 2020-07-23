@@ -23,6 +23,8 @@ class LogViewController extends Controller
 
     protected $eof = false;
 
+    protected $page_timeout = 3;
+
     public function index(Request $request)
     {
         $current = $request->filled('f') ? decrypt($request->query('f'), false) : "";
@@ -53,8 +55,9 @@ class LogViewController extends Controller
 
     public function api(Request $request)
     {
-        $lines = $request->query('lines', 100);
-        if(session('admin_logs_view.last', 0) >= $lines) return [];
+        /*$lines = $request->query('lines', 100);
+        if(session('admin_logs_view.last', 0) >= $lines) return [];*/
+        $this->page_timeout = $request->query('timeout', 3);
         $file = $request->filled('f') ? decrypt($request->query('f'), false) : "";
         return $this->reverseData(new \SplFileInfo($file));
     }
@@ -85,7 +88,7 @@ class LogViewController extends Controller
         while (true){
             $read_line++;
             $items[$read_line] = $this->parseLine($line, $file->openFile());
-            if (empty($items[$read_line]) || (time() - $time) > 3) break;
+            if (empty($items[$read_line]) || (time() - $time) >= $this->page_timeout) break;
         }
 
         //断点记录

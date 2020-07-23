@@ -63,109 +63,108 @@
 <div class="wrapper">
     <!-- begin row -->
     <div class="row m-2 pt-3">
-            <!-- begin col-12 -->
-            <div class="col-md-3">
-                <div class="card sidebar" style="min-height:200px">
-                    <div class="card-header">
-                        <h3 class="card-title">Files</h3>
-                    </div>
-                    <div class="card-body p-0 sidebar-light-primary">
-                        @php
-                            $build_tag = function($results)use(&$build_tag, $current){
-                                $str = '';
-                                foreach ($results as $key => $value){
-                                    $is_folder = is_array($value);
-                                    $icon = $is_folder?"folder":"file";
-                                    $attr = 'class="nav-link '.($current==$value?"active":"").'" href="'.($is_folder?'#':route('admin.logs', ['f' => encrypt($value, false)])).'"';
+        <!-- begin col-12 -->
+        <div class="col-md-3">
+            <div class="card sidebar" style="min-height:200px">
+                <div class="card-header">
+                    <h3 class="card-title">Files</h3>
+                </div>
+                <div class="card-body p-0 sidebar-light-primary">
+                    @php
+                        $build_tag = function($results)use(&$build_tag, $current){
+                            $str = '';
+                            foreach ($results as $key => $value){
+                                $is_folder = is_array($value);
+                                $icon = $is_folder?"folder":"file";
+                                $attr = 'class="nav-link '.($current==$value?"active":"").'" href="'.($is_folder?'#':route('admin.logs', ['f' => encrypt($value, false)])).'"';
 
-                                    $str .= '<li class="nav-item '. ($current==$value?"menu-open":"").(!$is_folder?"":"has-treeview") .'"><a '. $attr .'><i class="nav-icon fas fa-'. $icon .'"></i><p>'.$key.($is_folder?'<i class="right fas fa-angle-left"></i>':'').'</p></a>';
-                                    if(is_array($value)){
-                                        $str .= '<ul class="nav nav-treeview">'.$build_tag($value).'</ul>';
-                                    }
+                                $str .= '<li class="nav-item '. ($current==$value?"menu-open":"").(!$is_folder?"":"has-treeview") .'"><a '. $attr .'><i class="nav-icon fas fa-'. $icon .'"></i><p>'.$key.($is_folder?'<i class="right fas fa-angle-left"></i>':'').'</p></a>';
+                                if(is_array($value)){
+                                    $str .= '<ul class="nav nav-treeview">'.$build_tag($value).'</ul>';
                                 }
-                                return $str.'</li>';
                             }
-                        @endphp
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview"
-                            data-accordion="true" id="tree_list">
-                            {!! $build_tag($tree) !!}
-                        </ul>
-                    </div>
+                            return $str.'</li>';
+                        }
+                    @endphp
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview"
+                        data-accordion="true" id="tree_list">
+                        {!! $build_tag($tree) !!}
+                    </ul>
                 </div>
             </div>
-            <div class="col-md-9">
-                <div class="card content-table">
-                    <div class="card-header">
-                        <div class="form-group row p-0 m-0" style="float:left; ">
-                            <admin::label class="text-right" text="Show Lines"/>
-                            <div>
-                                <admin::select :selected="old('lines', request('lines', 100))" search="false"
-                                               :results="['100' => 100, '200' => 200, '500'=>500, '1000'=>1000, '2000'=>2000]"
-                                               name="lines"/>
-                            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card content-table">
+                <div class="card-header">
+                    <div class="form-group row p-0 m-0" style="float:left; ">
+                        <admin::label class="col-control-label" text="Time Out Seconds"/>
+                        <div>
+                            <admin::input name="timeout" :value="request('timeout', 3)"/>
                         </div>
-                        <div class="card-tools">
-                            <div class="input-group input-group-sm" style="width: 200px;">
-                                <input type="search" style="display: none" name="search"
-                                       class="form-control float-right" value=""
-                                       placeholder="{{ trans('admin.search') }}...">
+                        <button class="btn btn-sm btn-default timeout-btn">Confirm</button>
+                    </div>
+                    <div class="card-tools">
+                        <div class="input-group input-group-sm" style="width: 200px;">
+                            <input type="search" style="display: none" name="search"
+                                   class="form-control float-right" value=""
+                                   placeholder="{{ trans('admin.search') }}...">
 
-                                {{--<div class="input-group-btn">
-                                    <button type="button" class="btn btn-default btn-search"><i class="fa fa-search"></i>
-                                    </button>
-                                </div>--}}
-                            </div>
+                            {{--<div class="input-group-btn">
+                                <button type="button" class="btn btn-default btn-search"><i class="fa fa-search"></i>
+                                </button>
+                            </div>--}}
                         </div>
                     </div>
-                    <div class="card-body p-0">
-                        <admin::table nowrap="false" nodata="true">
-                            <slot name="thead">
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Level</th>
-                                    <th>Context</th>
-                                    <th>Content</th>
-                                    <th>More</th>
-                                </tr>
-                            </slot>
-                            <slot name="tbody">
-                                {{--@foreach($data as $key => $val)
-                                    <tr>
-                                        <td style="white-space: nowrap;">{{ $val[3] }}</td>
-                                        <td style="white-space: nowrap;">{{ $val[2] }}</td>
-                                        <td style="white-space: nowrap;">{{ $val[1] }}</td>
-                                        <td>
-                                            <code style="word-break:break-word">
-                                                {{ trim($val[4]) }}
-                                            </code>
-                                        </td>
-                                        <td>
-                                            @if(isset($val[5]) && !empty(trim($val[5])))
-                                                <button type="button" class="btn btn-xs btn-primary" data-toggle="modal"
-                                                        data-target="#modal-default{{ $key }}"> View
-                                                </button>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <div class="modal fade" id="modal-default{{ $key }}">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <pre><code>{{ $val[4].(isset($val[5])?$val[5]:"") }}</code></pre>
-                                                </div>
-                                            </div>
-                                            <!-- /.modal-content -->
-                                        </div>
-                                        <!-- /.modal-dialog -->
-                                    </div>
-                                @endforeach--}}
-                            </slot>
-                        </admin::table>
-                    </div>
-                    <!-- /.card-body -->
                 </div>
+                <div class="card-body p-0">
+                    <admin::table nowrap="false" nodata="true">
+                        <slot name="thead">
+                            <tr>
+                                <th>Date</th>
+                                <th>Level</th>
+                                <th>Context</th>
+                                <th>Content</th>
+                                <th>More</th>
+                            </tr>
+                        </slot>
+                        <slot name="tbody">
+                            {{--@foreach($data as $key => $val)
+                                <tr>
+                                    <td style="white-space: nowrap;">{{ $val[3] }}</td>
+                                    <td style="white-space: nowrap;">{{ $val[2] }}</td>
+                                    <td style="white-space: nowrap;">{{ $val[1] }}</td>
+                                    <td>
+                                        <code style="word-break:break-word">
+                                            {{ trim($val[4]) }}
+                                        </code>
+                                    </td>
+                                    <td>
+                                        @if(isset($val[5]) && !empty(trim($val[5])))
+                                            <button type="button" class="btn btn-xs btn-primary" data-toggle="modal"
+                                                    data-target="#modal-default{{ $key }}"> View
+                                            </button>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <div class="modal fade" id="modal-default{{ $key }}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <pre><code>{{ $val[4].(isset($val[5])?$val[5]:"") }}</code></pre>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                            @endforeach--}}
+                        </slot>
+                    </admin::table>
+                </div>
+                <!-- /.card-body -->
             </div>
-            <!-- end panel -->
+        </div>
+        <!-- end panel -->
 
         <div id="modals"></div>
     </div>
@@ -173,6 +172,12 @@
 <script>
     $(function () {
         var table;
+        var timeout = $('[name="timeout"]').val();
+
+        $('.timeout-btn').click(function () {
+            timeout = $('[name="timeout"]').val();
+            loadrows();
+        });
 
         $('[name="search"]').keyup(function () {
             if ($(this).prop('comStart')) return;    // 中文输入过程中不截断
@@ -187,22 +192,21 @@
 
         $('#tree_list a.active').parents('li').addClass('menu-open').children('a').addClass('active');
 
-        $('[name="lines"]').select2();
-        $('[name="lines"]').change(function () {
-            NProgress.start();
-            loadrows();
-        });
-
         var file = '{{ request("f") }}';
-        if(file != '') NProgress.start();
+        if (file != '') NProgress.start();
+
+        var loading = false;
+
         loadrows();
 
         function loadrows() {
-            if(file == '') return;
-            var lines = $('[name="lines"]').val();
+            if (loading) return;
+            loading = true;
+            if (file == '') return;
+            NProgress.start();
             var query = {
                 f: file,
-                lines: lines
+                timeout: timeout
             }
             $.get('{{ route('admin.logs.api') }}', query, function (data) {
                 if (data.length == 0) {
@@ -210,9 +214,9 @@
                     if (table == undefined) {
                         table = $('.table').DataTable({
                             searching: true,
-                            ordering:false,
-                            paging:false,
-                            scrollY:$(window).height() ? $(window).height() - 140 : 420,
+                            ordering: false,
+                            paging: false,
+                            scrollY: $(window).height() ? $(window).height() - 140 : 420,
                             dom: 'Brt',
                             buttons: [
                                 'print'
@@ -222,12 +226,17 @@
                         table.draw();
                     }
                     NProgress.done();
+                    loading = false;
+                    /*intervalID = setTimeout(function () {
+                        loadrows()
+                    }, 5000); //开始任务*/
                     return;
                 }
 
                 $(data).each(function (_, val) {
                     addRow(val);
                 });
+                loading = false;
                 loadrows();
             });
         }
@@ -248,7 +257,9 @@
             '<div class="modal-dialog modal-lg">' +
             '<div class="modal-content">' +
             '<div class="modal-body">' +
-            '<pre><code class="val">' + val[4].replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}) + '</code></pre>' +
+            '<pre><code class="val">' + val[4].replace(/[<>&"]/g, function (c) {
+                return {'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;'}[c];
+            }) + '</code></pre>' +
             '</div>' +
             '</div>' +
             '</div>' +
