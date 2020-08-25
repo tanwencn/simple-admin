@@ -97,22 +97,21 @@
             <div class="card content-table">
                 <div class="card-header">
                     <div class="form-group row p-0 m-0" style="float:left; ">
-                        <admin::label class="col-control-label" text="Time Out Seconds"/>
+                        <label class="col-control-label col-control-label-sm text-right col-control-label text-right" style="line-height: 32px">Continue to load：</label>
                         <div>
-                            <admin::input name="timeout" :value="request('timeout', 3)"/>
+                            <input type="number" class="form-control form-control-sm" style="width: 100px; height: 32px" id="load_number" value="100" />
                         </div>
-                        <button class="btn btn-sm btn-default timeout-btn">Confirm</button>
+                        <label class="col-control-label col-control-label-sm col-control-label" style="line-height: 32px">&nbsp;rows&nbsp;</label>
+                        <button class="btn btn-default btn-xs btn-load" style="height: 32px">Confirm</button>
                     </div>
                     <div class="card-tools">
                         <div class="input-group input-group-sm" style="width: 200px;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="read_rows">Loaded(0)</span>
+                            </div>
                             <input type="search" style="display: none" name="search"
                                    class="form-control float-right" value=""
                                    placeholder="{{ trans('admin.search') }}...">
-
-                            {{--<div class="input-group-btn">
-                                <button type="button" class="btn btn-default btn-search"><i class="fa fa-search"></i>
-                                </button>
-                            </div>--}}
                         </div>
                     </div>
                 </div>
@@ -171,102 +170,108 @@
 </div>
 <script>
     $(function () {
-        var table;
-        var timeout = $('[name="timeout"]').val();
-
-        $('.timeout-btn').click(function () {
-            timeout = $('[name="timeout"]').val();
-            loadrows();
-        });
-
-        $('[name="search"]').keyup(function () {
-            if ($(this).prop('comStart')) return;    // 中文输入过程中不截断
-            NProgress.start();
-            table.search($('input[name="search"]').val()).draw();
-            NProgress.done();
-        }).on('compositionstart', function () {
-            $(this).prop('comStart', true);
-        }).on('compositionend', function () {
-            $(this).prop('comStart', false);
-        });
 
         $('#tree_list a.active').parents('li').addClass('menu-open').children('a').addClass('active');
 
-        var file = '{{ request("f") }}';
-        if (file != '') NProgress.start();
+        function ReadLog(file)
+        {
+            this.file = file;
+            this.rows = 100;
 
-        var loading = false;
+            this.loading = false;
 
-        loadrows();
+            this.table;
+            var t=this;
+            var line = 0;
 
-        function loadrows() {
-            if (loading) return;
-            loading = true;
-            if (file == '') return;
-            NProgress.start();
-            var query = {
-                f: file,
-                timeout: timeout
-            }
-            $.get('{{ route('admin.logs.api') }}', query, function (data) {
-                if (data.length == 0) {
-                    $('[name="search"]').show();
-                    if (table == undefined) {
-                        table = $('.table').DataTable({
-                            searching: true,
-                            ordering: false,
-                            paging: false,
-                            scrollY: $(window).height() ? $(window).height() - 140 : 420,
-                            dom: 'Brt',
-                            buttons: [
-                                'print'
-                            ]
-                        });
-                    } else {
-                        table.draw();
+            this.load = function(rows){
+                if (t.loading || t.file == '') return;
+                loading = true;
+                NProgress.start();
+                $.ajax({
+                    method: 'GET',
+                    url: '{{ route('admin.logs.api') }}',
+                    data: { f: t.file, rows:rows },
+                    async:false,
+                    dataType: 'JSON',
+                    success: function (rs) {
+                        t.loading = false;
+                        var data = rs.data;
+
+                        addRows(data);
+
+                        $('[name="search"]').show();
+                        if (t.table == undefined) {
+                            t.table = $('.table').DataTable({
+                                searching: true,
+                                ordering: false,
+                                paging: false,
+                                scrollY: $(window).height() ? $(window).height() - 140 : 420,
+                                dom: 'Brt',
+                                buttons: [
+                                    'print'
+                                ]
+                            });
+                        } else {
+                            t.table.draw();
+                        }
+                        NProgress.done();
+                    },
+                    error: function (rs) {
+                        if (rs['responseJSON'] && rs['responseJSON']['message']) {
+                            Admin.error(rs['responseJSON']['message']);
+                        }
                     }
-                    NProgress.done();
-                    loading = false;
-                    /*intervalID = setTimeout(function () {
-                        loadrows()
-                    }, 5000); //开始任务*/
-                    return;
-                }
-
-                $(data).each(function (_, val) {
-                    addRow(val);
                 });
-                loading = false;
-                loadrows();
-            });
+            };
+
+            var addRows = function(data){
+                $(data).each(function(_, val){
+                    var tr = '<tr>' +
+                        '<td style="white-space: nowrap;" class="val">' + val[0] + '</td>' +
+                        '<td style="white-space: nowrap;" class="val">' + val[1] + '</td>' +
+                        '<td style="white-space: nowrap;" class="val">' + val[2] + '</td>' +
+                        '<td><code style="word-break:break-word" class="val">' + val[3] + '</code></td>' +
+                        '<td><button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modal-default' + line + '"> show</button></td>' +
+                        '</tr>';
+                    $('tbody').append(tr);
+                    var modal = '<div class="modal fade" id="modal-default' + line + '">' +
+                        '<div class="modal-dialog modal-lg">' +
+                        '<div class="modal-content">' +
+                        '<div class="modal-body">' +
+                        '<pre><code class="val">' + val[4].replace(/[<>&"]/g, function (c) {
+                            return {'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;'}[c];
+                        }) + '</code></pre>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                    $('#modals').append(modal);
+                    line++;
+                });
+                $('#read_rows').text('Loaded('+ line +')');
+            }
         }
+
+        var ReadLog = new ReadLog('{{ request("f") }}');
+        ReadLog.load();
+
+        $('.btn-load').click(function(){
+            var number = $('#load_number').val();
+            ReadLog.load(number);
+        });
+        $('[name="search"]').keyup(function () {
+            if ($(document).prop('comStart')) return;    // 中文输入过程中不截断
+            NProgress.start();
+            ReadLog.table.search($('input[name="search"]').val()).draw();
+            NProgress.done();
+        }).on('compositionstart', function () {
+            $(document).prop('comStart', true);
+        }).on('compositionend', function () {
+            $(document).prop('comStart', false);
+        });
+
     });
-
-    var line = 1;
-
-    function addRow(val) {
-        var tr = '<tr>' +
-            '<td style="white-space: nowrap;" class="val">' + val[0] + '</td>' +
-            '<td style="white-space: nowrap;" class="val">' + val[1] + '</td>' +
-            '<td style="white-space: nowrap;" class="val">' + val[2] + '</td>' +
-            '<td><code style="word-break:break-word" class="val">' + val[3] + '</code></td>' +
-            '<td><button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modal-default' + line + '"> show</button></td>' +
-            '</tr>';
-        $('tbody').append(tr);
-        var modal = '<div class="modal fade" id="modal-default' + line + '">' +
-            '<div class="modal-dialog modal-lg">' +
-            '<div class="modal-content">' +
-            '<div class="modal-body">' +
-            '<pre><code class="val">' + val[4].replace(/[<>&"]/g, function (c) {
-                return {'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;'}[c];
-            }) + '</code></pre>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
-        $('#modals').append(modal);
-        line++;
-    }
 
 
 </script>

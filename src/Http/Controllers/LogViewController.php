@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Facades\URL;
+use Tanwencn\Admin\Log\FileLog;
 
 class LogViewController extends Controller
 {
@@ -48,80 +49,25 @@ class LogViewController extends Controller
 
         $statistics = "";
 
-        session()->forget('admin_logs_view');
+        session()->forget('admin_logs_parser');
 
         return $this->view('index', compact('tree', 'statistics', 'current', 'data', 'page', 'eof'));
     }
 
     public function api(Request $request)
     {
-        /*$lines = $request->query('lines', 100);
-        if(session('admin_logs_view.last', 0) >= $lines) return [];*/
-        $this->page_timeout = $request->query('timeout', 3);
         $file = $request->filled('f') ? decrypt($request->query('f'), false) : "";
-        return $this->reverseData(new \SplFileInfo($file));
-    }
 
-    protected function reverseData(\SplFileInfo $file)
-    {
-        $items = $this->page($file);
+        $log = session('admin_logs_parser', new FileLog($file));
 
-        return array_values(array_filter($items));
-    }
-
-    protected function totalLines(\SplFileObject $file)
-    {
-        $lines = 0;
-        $file->setFlags(\SplFileObject::READ_AHEAD);
-        $lines += iterator_count($file) - 1; // -1 gives the same number as "wc -l"
-        return $lines;
-    }
-
-    protected function page(\SplFileInfo $file)
-    {
-        $line = session('admin_logs_view.read', $this->totalLines($file->openFile()));
-
-        $time = time();
-
-        $items = [];
-        $read_line = 0;
-        while (true){
-            $read_line++;
-            $items[$read_line] = $this->parseLine($line, $file->openFile());
-            if (empty($items[$read_line]) || (time() - $time) >= $this->page_timeout) break;
-        }
-
-        //断点记录
-        session([
-            'admin_logs_view' => [
-                'last' => session('admin_logs_view.last', 0)+$read_line,
-                'read' => $line,
-                'time' => request()->query('timestrap')
-            ]
+        $response = response([
+            'data' => $log->row($request->query('rows', 100)),
+            'read_rows' => $log->getReadRows()
         ]);
 
-        return $items;
-    }
+        session(['admin_logs_parser' => $log]);
 
-    protected function parseLine(&$line, \SplFileObject $file)
-    {
-        $content = [];
-        $result = [];
-        $while = true;
-        while ($line >= 0 && $while) {
-            $file->seek($line);
-            $content[$line] = trim($file->current());
-            if (preg_match('/\[\d{4}-\d{2}-\d{2}.*?\].*/', $content[$line])) $while = false;
-            $line--;
-
-        }
-        if ($content) {
-            $data = array_reverse(array_filter($content));
-            preg_match('/^\[(\d{4}-\d{2}-\d{2}.*?)\] (.+?)\.(.+?): (.*)/', $data[0], $result);
-            unset($result[0]);
-            $result[] = implode("\n", $data);
-        }
-        return array_values($result);
+        return $response;
     }
 
     protected function abilitiesMap()
