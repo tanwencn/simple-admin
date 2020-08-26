@@ -180,62 +180,60 @@
 
             this.loading = false;
 
-            this.table;
+            this.table = $('.table').DataTable({
+                searching: true,
+                ordering: false,
+                paging: false,
+                scrollY: $(window).height() ? $(window).height() - 140 : 420,
+                dom: 'Brt',
+                buttons: [
+                    'print'
+                ]
+            });
             var t=this;
             var line = 0;
 
             this.load = function(rows){
-                if (t.loading || t.file == '') return;
-                loading = true;
+                if (t.file == '') return;
                 NProgress.start();
-                $.ajax({
-                    method: 'GET',
-                    url: '{{ route('admin.logs.api') }}',
-                    data: { f: t.file, rows:rows },
-                    async:false,
-                    dataType: 'JSON',
-                    success: function (rs) {
-                        t.loading = false;
-                        var data = rs.data;
+                setTimeout(function(){
+                    $.ajax({
+                        method: 'GET',
+                        url: '{{ route('admin.logs.api') }}',
+                        data: { f: t.file, rows:rows },
+                        async:false,
+                        dataType: 'JSON',
+                        success: function (rs) {
+                            var data = rs.data;
 
-                        addRows(data);
+                            addRows(data);
 
-                        $('[name="search"]').show();
-                        if (t.table == undefined) {
-                            t.table = $('.table').DataTable({
-                                searching: true,
-                                ordering: false,
-                                paging: false,
-                                scrollY: $(window).height() ? $(window).height() - 140 : 420,
-                                dom: 'Brt',
-                                buttons: [
-                                    'print'
-                                ]
-                            });
-                        } else {
-                            t.table.draw();
+                            $('[name="search"]').show();
+
+                            NProgress.done();
+                        },
+                        error: function (rs) {
+                            if (rs['responseJSON'] && rs['responseJSON']['message']) {
+                                Admin.error(rs['responseJSON']['message']);
+                            }
                         }
-                        NProgress.done();
-                    },
-                    error: function (rs) {
-                        if (rs['responseJSON'] && rs['responseJSON']['message']) {
-                            Admin.error(rs['responseJSON']['message']);
-                        }
-                    }
-                });
+                    });
+                }, 100);
             };
 
             var addRows = function(data){
+                var rows = [];
+                var modal;
                 $(data).each(function(_, val){
-                    var tr = '<tr>' +
+                    rows.push([val[0], val[1], val[2], '<code style="word-break:break-word" class="val">' + val[3] + '</code>', '<button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modal-default' + line + '"> show</button>']);
+                    /*var tr = '<tr>' +
                         '<td style="white-space: nowrap;" class="val">' + val[0] + '</td>' +
                         '<td style="white-space: nowrap;" class="val">' + val[1] + '</td>' +
                         '<td style="white-space: nowrap;" class="val">' + val[2] + '</td>' +
                         '<td><code style="word-break:break-word" class="val">' + val[3] + '</code></td>' +
                         '<td><button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#modal-default' + line + '"> show</button></td>' +
-                        '</tr>';
-                    $('tbody').append(tr);
-                    var modal = '<div class="modal fade" id="modal-default' + line + '">' +
+                        '</tr>';*/
+                    modal += '<div class="modal fade" id="modal-default' + line + '">' +
                         '<div class="modal-dialog modal-lg">' +
                         '<div class="modal-content">' +
                         '<div class="modal-body">' +
@@ -246,10 +244,11 @@
                         '</div>' +
                         '</div>' +
                         '</div>';
-                    $('#modals').append(modal);
                     line++;
                 });
-                $('#read_rows').text('Loaded('+ line +')');
+                t.table.rows.add(rows).draw(false);
+                $('#modals').append(modal);
+                $('#read_rows').text('Loaded('+ t.table.page.info().recordsDisplay +')');
             }
         }
 
@@ -263,7 +262,8 @@
         $('[name="search"]').keyup(function () {
             if ($(document).prop('comStart')) return;    // 中文输入过程中不截断
             NProgress.start();
-            ReadLog.table.search($('input[name="search"]').val()).draw();
+            ReadLog.table.search($('input[name="search"]').val()).draw(false);
+            $('#read_rows').text('Loaded('+ ReadLog.table.page.info().recordsDisplay +')');
             NProgress.done();
         }).on('compositionstart', function () {
             $(document).prop('comStart', true);
