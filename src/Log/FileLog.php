@@ -110,6 +110,7 @@ class FileLog
 
     public function __wakeup()
     {
-        $this->openFile();
+        if (file_exists($this->filePath))
+            $this->openFile();
     }
 }
