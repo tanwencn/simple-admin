@@ -57,9 +57,9 @@ class FileLog
         if ($this->offset == -1) $this->eof_tell = -($this->file->ftell() + 1);
 
         while (!$this->eof()) {
-            $char = $this->file->fgetc();
-
             $this->file->fseek($this->offset--, SEEK_END);
+
+            $char = $this->file->fgetc();
 
             if ($char === "\n" || $char === "\r") break;
 
