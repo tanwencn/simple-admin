@@ -20,9 +20,9 @@ class FirstLogin
     public function handle($request, Closure $next, $status = null)
     {
         if($this->hasFirstLogin() && Route::currentRouteName() != 'admin.users.change_password'){
-            response()->view('admin::_users.change_password', [
+            return response()->view('admin::_users.change_password', [
                 'tip' => trans('admin.change_password_tip')
-            ])->send();
+            ]);
         }
         return $next($request);
     }
