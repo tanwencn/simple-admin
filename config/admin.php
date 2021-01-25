@@ -29,6 +29,24 @@ return [
         ]
     ],
 
+    'supervisor' => [
+        'resolvers' => [
+            'Operation Record' => [
+                'mode' => 'database',
+                'table' => 'operation_logs',
+                'connection' => 'mysql',
+                'primaryKey' => 'id',
+                'order' => 'desc',
+                'render' => [
+                    'body' => [
+                        'content' => 'click'
+                    ]
+                ]
+            ]
+        ],
+        'view' => ['Operation Record']
+    ],
+
     'auth' => [
         'login' => [
             'controller' => 'App\Admin\Controllers\LoginController',
