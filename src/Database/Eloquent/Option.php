@@ -34,7 +34,15 @@ class Option extends Model
 
             $model = static::query()->where('name', $name)->select('value')->first();
 
-            return $model && $model->value ? $model->value : "";
+            $results = $model && $model->value ? $model->value : "";
+
+            if(!empty($results)) {
+                $json = json_decode($results, true);
+
+                if (json_last_error() == JSON_ERROR_NONE) return $json;
+            }
+            
+            return $results;
         });
 
         return $data ?: $defalut;

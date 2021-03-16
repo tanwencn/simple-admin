@@ -41,7 +41,7 @@ class OptionController extends Controller
             $model = Option::firstOrNew([
                 'name' => $name
             ]);
-            $model->value = $option ?: '';
+            $model->value = is_array($option) ? json_encode($option) : ($option?:'');
             $model->save();
         }
 
