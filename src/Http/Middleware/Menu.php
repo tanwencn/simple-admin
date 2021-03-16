@@ -23,13 +23,7 @@ class Menu extends AbstractMenuMiddleware
         });
 
         $this->group(trans_choice('admin.system', 0), 99)
-            ->add(trans_choice('admin.log', 0))->sort(99)->icon('record-vinyl')
-            ->child(trans_choice('admin.laravel_logs', 0), function ($menu) {
-                $menu->blank()->uri('logs')->auth('laravel_logs')->sort(100);
-            })
-            ->child(trans_choice('admin.operationlog', 0), function ($menu) {
-                $menu->route('admin.operationlog')->auth('operationlog')->sort(99);
-            });
+            ->add(trans_choice('admin.log', 0))->icon('record-vinyl')->blank()->route('supervisor.index')->auth('dashboard');
 
         $this->group(trans_choice('admin.system', 0))->add(trans_choice('admin.setting', 0))->icon('cog')->route('admin.options', ['template' => 'default'])->sort(98)->auth('setting');
     }

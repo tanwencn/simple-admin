@@ -65,5 +65,7 @@ class InstallCommand extends Command
         $this->call('admin:build');
 
         $this->call('admin:registerPermissions');
+
+        $this->call('supervisor:install');
     }
 }

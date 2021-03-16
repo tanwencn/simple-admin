@@ -54,9 +54,7 @@ class BootPermissionsCommand extends Command
 
         $this->ability('setting');
 
-        $this->ability('operationlog');
-
-        $this->ability('laravel_logs');
+        $this->ability('supervisor');
 
         $this->abilityResources('user');
 

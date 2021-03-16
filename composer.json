@@ -14,7 +14,8 @@
     "require": {
         "laravel/framework" : "^6.0",
         "spatie/laravel-permission" : "^3.0",
-        "tanwencn/laravel-elfinder" : "^2.0",
+        "tanwencn/laravel-elfinder": "^2.0",
+        "tanwencn/supervisor": "^2.0",
         "spatie/laravel-blade-x": "^2.6",
         "symfony/dom-crawler": "^5.1"
     },
