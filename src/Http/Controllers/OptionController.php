@@ -20,7 +20,7 @@ class OptionController extends Controller
     use AuthorizesRequests,Package;
 
     public function view($template){
-        $this->authorize('admin.setting');
+        $this->authorize('setting');
         
         abort_unless(View::exists("admin::options.{$template}"), 404);
         
@@ -33,7 +33,7 @@ class OptionController extends Controller
 
     public function save()
     {
-        $this->authorize('admin.setting');
+        $this->authorize('setting');
 
         $options = request('options');
 
